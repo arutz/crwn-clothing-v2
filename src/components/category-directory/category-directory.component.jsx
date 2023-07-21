@@ -1,16 +1,17 @@
-import CategoryItem from "../category-item/category-item.component";
-import "./category-directory.styles.scss"
+import React from 'react'
+import CategoryItem from '../category-item/category-item.component'
+import './category-directory.styles.scss'
 
-const CategoryList = ({categories}) => {
-    return (
+const CategoryList = ({ categories }) => {
+  return (
         <div className="categories-container"> {
             categories.map((category) => {
-                return (
+              return (
                     <CategoryItem key={category.id} category={category}/>
-                )
+              )
             })
         } </div>
-    );
+  )
 }
 
 export default CategoryList
