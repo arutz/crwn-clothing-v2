@@ -26,15 +26,13 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider)
 export const db = getFirestore()
 
 export const createUserDocument = async (userAuth) => {
-    console.log(userAuth)
     const userDocRef = doc(db, 'users', userAuth.uid)
-    console.log(userDocRef)
     const userSnap = await getDoc(userDocRef)
     if(!userSnap.exists()) {
-        console.log('user does not exist, creating...')
-        const {displayName, email, uid} = userAuth
+        const {displayName, metadata, email, uid} = userAuth
+        const { createdAt, creationTime, lastLoginAt, lastSignInTime } = metadata
         try {
-            await setDoc(userDocRef, {displayName, email , uid})
+            await setDoc(userDocRef, {displayName, email , uid, createdAt, creationTime, lastLoginAt, lastSignInTime})
         } catch(error) {
             console.log(error)
         }
