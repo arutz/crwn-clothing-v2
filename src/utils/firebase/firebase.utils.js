@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword } from 'firebase/auth'
 import { getFirestore, doc, setDoc, getDoc} from 'firebase/firestore'
 
 // web app's Firebase configuration
@@ -25,17 +25,37 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider)
 // init db
 export const db = getFirestore()
 
-export const createUserDocument = async (userAuth) => {
+export const createUserDocument = async (userAuth, additionalInfo) => {
     const userDocRef = doc(db, 'users', userAuth.uid)
     const userSnap = await getDoc(userDocRef)
     if(!userSnap.exists()) {
         const {displayName, metadata, email, uid} = userAuth
         const { createdAt, creationTime, lastLoginAt, lastSignInTime } = metadata
         try {
-            await setDoc(userDocRef, {displayName, email , uid, createdAt, creationTime, lastLoginAt, lastSignInTime})
+            await setDoc(
+                    userDocRef, {   
+                        displayName,
+                        email, uid,
+                        createdAt,
+                        creationTime,
+                        lastLoginAt,
+                        lastSignInTime,
+                        ...additionalInfo
+                    })
         } catch(error) {
             console.log(error)
         }
     }
     return userDocRef
+}
+
+export const createAuthUserWithEmailAndPassword = async (email, password, displayName) => {
+    if(!email || !password) return
+    const userCred = await createUserWithEmailAndPassword(auth, email, password)
+    console.log(userCred)
+    if(userCred) {
+        const {user} = userCred
+        createUserDocument(user, displayName)
+    }
+    return userCred
 }

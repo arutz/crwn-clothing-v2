@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import './signon.styles.scss'
+import {createAuthUserWithEmailAndPassword} from '../../utils/firebase/firebase.utils'
+import FormInput from "../form-input/form-input.component"
 
 const defaultFormFields = {
     displayName: '',
@@ -20,30 +22,38 @@ const SignUpForm = () => {
         setFormFields({...formFields, [name]: value})
     }
 
+    const resetFormFields = () => {
+        setFormFields(defaultFormFields)
+    }
+
+    const handleSubmit= async (event) => {
+        event.preventDefault()
+        console.log("submit")
+        if(password !== confimPassword) {
+            alert("password do not match")
+            return
+        }
+        try {
+            const userCred = await createAuthUserWithEmailAndPassword(email, password, displayName)
+            console.log(userCred)
+            resetFormFields();
+        } catch(error) {
+            if(error.code === 'auth/email-already-in-use') {
+                alert(`error during user creation: ${error.code}`)
+            }
+        }
+    }
+
     return (
         <div className="signonform">
             <h1>Sign up with email or google account</h1>
-                <form>
-                    <div className="group">
-                        <label className="form-input-label">Display Name</label>
-                        <input className="form-input" onChange={handleChange} type="text" name="displayName" value={displayName}/>
-                    </div>
-                    <div className="group">
-                        <label className="form-input-label">E-Mail</label>
-                        <input className="form-input" onChange={handleChange} type="email" name="email" value={email}/>
-                    </div>
-                    <div className="group">
-                        <label className="form-input-label">Password</label>
-                        <input className="form-input" onChange={handleChange} type="password" name="password" value={password}/>
-                    </div>
-                    <div className="group">
-                        <label className="form-input-label">Confirm Password</label>
-                        <input className="form-input" onChange={handleChange} type="password" name="confimPassword" value={confimPassword}/>
-                    </div>
+                <form onSubmit={handleSubmit}>
+                    <FormInput label={'Display Name'} onChange={handleChange} name="displayName" type="text" value={displayName}/>
+                    <FormInput label='E-Mail' onChange={handleChange} type="email" name="email" value={email}/>
+                    <FormInput label='Password' onChange={handleChange} type="password" name="password" value={password}/>
+                    <FormInput label='Confirm Password'onChange={handleChange} type="password" name="confimPassword" value={confimPassword}/>
                     <button type="submit">Register</button>
                 </form>
-            
-            
         </div>
     )
 }
