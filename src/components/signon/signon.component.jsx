@@ -45,15 +45,16 @@ const SignUpForm = () => {
     }
 
     return (
-        <div className="signonform">
-            <h1>Sign up with email or google account</h1>
-                <form onSubmit={handleSubmit}>
-                    <FormInput label={'Display Name'} onChange={handleChange} name="displayName" type="text" value={displayName}/>
-                    <FormInput label='E-Mail' onChange={handleChange} type="email" name="email" value={email}/>
-                    <FormInput label='Password' onChange={handleChange} type="password" name="password" value={password}/>
-                    <FormInput label='Confirm Password'onChange={handleChange} type="password" name="confimPassword" value={confimPassword}/>
-                    <button type="submit">Register</button>
-                </form>
+        <div className="sign-up-container">
+            <h2>Don't have an account?</h2>
+            <span>Sign up with email or google account</span>
+            <form onSubmit={handleSubmit}>
+                <FormInput label={'Display Name'} onChange={handleChange} name="displayName" type="text" value={displayName}/>
+                <FormInput label='E-Mail' onChange={handleChange} type="email" name="email" value={email}/>
+                <FormInput label='Password' onChange={handleChange} type="password" name="password" value={password}/>
+                <FormInput label='Confirm Password'onChange={handleChange} type="password" name="confimPassword" value={confimPassword}/>
+                <button type="submit">Register</button>
+            </form>
         </div>
     )
 }
