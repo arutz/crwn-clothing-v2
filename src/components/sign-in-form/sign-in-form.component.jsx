@@ -24,17 +24,18 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+    const userCred = await signInWithGooglePopup();
+    console.log(userCred?.user)
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      await signInAuthUserWithEmailAndPassword(
+      signInAuthUserWithEmailAndPassword(
         email,
         password
-      );
+      ).then((userCred) => console.log(userCred?.user));
       resetFormFields();
     } catch (error) {
       switch (error.code) {
